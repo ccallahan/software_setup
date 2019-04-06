@@ -8,18 +8,20 @@ param (
 )
 
 # Variable Time!
-$fileName = "$PSScriptRoot\report.xml";
-$xmlDoc = [System.Xml.XmlDocument](Get-Content $fileName);
-$global:stagestatus = 0;
+$fileName = "$PSScriptRoot\report.xml"; # Sets XML file location.
+$xmlDoc = [System.Xml.XmlDocument](Get-Content $fileName); # Imports .NET and the file.
+$global:stagestatus = 0; # Initializing the stage status as a global.
 $niniteURL = "https://ninite.com/.net4.7.2-7zip-adoptjdkx11-adoptjdkx8-air-cccp-chrome-discord-filezilla-gimp-googleearth-imgburn-inkscape-notepadplusplus-python-qbittorrent-shockwave-silverlight-spotify-steam-teamviewer14-vlc-windirstat/ninite.exe";
 $niniteOutput = "$PSScriptRoot\Ninite.exe";
 
 
 function OSRouting {
     if (os = Windows) {
+        XMLTest;
         WindowsStaging;
     }
-    elseif (os = Fedoira) {
+    elseif (os = Fedora) {
+        XMLTest;
         FedoraStaging;
     }
     else {
@@ -38,10 +40,17 @@ function XMLReadLogic {
     Set-Variable -Name $global:stagestatus -Value $xmlDoc.status.status;
 }
 
+function XMLTest {
+    if ([System.IO.File]::Exists($fileName)) {
+        XMLReadLogic;
+    }
+    else {
+        XMLWriteLogic;
+    }
+}
+
 function WindowsStaging {
-    XMLReadLogic;
     if (stage = 1) {
-        XMLLogic;
         WindowsStage1;       
     }
     if ((stage = 1) -and (status = 1)) {
