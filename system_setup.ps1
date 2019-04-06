@@ -8,7 +8,7 @@ param (
 )
 
 # Variable Time!
-$fileName = “report.xml”;
+$fileName = "$PSScriptRoot\report.xml";
 $xmlDoc = [System.Xml.XmlDocument](Get-Content $fileName);
 $global:stagestatus = 0;
 $niniteURL = "https://ninite.com/.net4.7.2-7zip-adoptjdkx11-adoptjdkx8-air-cccp-chrome-discord-filezilla-gimp-googleearth-imgburn-inkscape-notepadplusplus-python-qbittorrent-shockwave-silverlight-spotify-steam-teamviewer14-vlc-windirstat/ninite.exe";
