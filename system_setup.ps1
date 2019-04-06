@@ -16,11 +16,11 @@ $niniteOutput = "$PSScriptRoot\Ninite.exe";
 
 
 function OSRouting {
-    if (os = Windows) {
+    if ($os -eq "Windows") {
         XMLTest;
         WindowsStaging;
     }
-    elseif (os = Fedora) {
+    elseif ($os -eq "Fedora") {
         XMLTest;
         FedoraStaging;
     }
@@ -50,15 +50,15 @@ function XMLTest {
 }
 
 function WindowsStaging {
-    if (stage = 1) {
+    if ($stage -eq 1) {
         WindowsStage1;       
     }
-    if ((stage = 1) -and (status = 1)) {
+    if (($stage -eq 1) -and ($status -eq 1)) {
         Set-Variable -Name $global:stage -Value 2;
         Set-Variable -Name $global:stagestatus -Value 0; 
         WindowsStage2;
     }
-    if ((stage = 2) -and (status = 1)) {
+    if (($stage -eq 2) -and ($status -eq 1)) {
         Set-Variable -Name $global:stage -Value 3;
         Set-Variable -Name $global:stagestatus -Value 0; 
         WindowsStage3;
@@ -105,3 +105,5 @@ function WindowsStage3 {
     XMLWriteLogic;
 
 }
+
+OSRouting;
