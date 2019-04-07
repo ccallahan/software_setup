@@ -9,7 +9,7 @@ param (
 
 
 # Variable Time!
-$stagestatus = 1; # Initializing the stage status as a global.
+$stagestatus = 1;
 $niniteURL = "https://ninite.com/.net4.7.2-7zip-adoptjdkx11-adoptjdkx8-air-cccp-chrome-discord-filezilla-gimp-googleearth-imgburn-inkscape-notepadplusplus-python-qbittorrent-shockwave-silverlight-spotify-steam-teamviewer14-vlc-windirstat/ninite.exe";
 $niniteOutput = "$PSScriptRoot\Ninite.exe";
 
@@ -25,15 +25,6 @@ function OSRouting {
     }
 }
 
-function XMLTest {
-    if ([System.IO.File]::Exists($fileName)) {
-        XMLReadLogic;
-    }
-    else {
-        XMLWriteLogic;
-    }
-}
-
 function WindowsStaging {
     if ($stage -eq 1) {
         WindowsStage1;       
@@ -43,6 +34,12 @@ function WindowsStaging {
     }
     if ($stage -eq 3) { 
         WindowsStage3;
+    }
+}
+
+function FedoraStaging {
+    if ($stage -eq 1) {
+        FedoraStage;       
     }
 }
 
@@ -72,7 +69,7 @@ function WindowsStage2 ($os, $stage, $hostname) {
     .\Ninite.exe
     Write-Output "I am going to sleep for fifteen minutes. If Ninite doesn't finish in time, type shutdown /a into a run prompt."
     Start-Sleep -Seconds 900
-    Write-Output "Ninite has finished, marking this stage as complete and preparing for reboot.";
+    Write-Output "Ninite probably has finished, marking this stage as complete and preparing for reboot.";
     shutdown /r /t 30 /c "Rebooting after Ninite installation.";
 }
 
@@ -80,6 +77,22 @@ function WindowsStage3 ($os, $stage, $hostname) {
     Write-Output "Stage 3 is ready. Beginning defrag.";
     defrag C: /H /V;
     Write-Output "Tada! Sysprep is complete."
+}
+
+function FedoraStage {
+    Write-Output "Updating System";
+    sudo dnf update -y;
+    Write-Output "Updates Complete, Moving on to installing stuff.";
+    sudo dnf groupinstall "Development Tools" -y;
+    sudo dnf install nano brasero -y;
+    Write-Output "Installing snapfiles.";
+    sudo ln -s /var/lib/snapd/snap /snap;
+    sudo snap install irccloud-desktop discord spotify termius-client;
+    sudo snap install vscode --classic;
+    Write-Output "Setting Hostname";
+    hostnamectl set-hostname $hostname;
+    Write-Output "Das Reboot";
+    sudo reboot;
 }
 
 OSRouting
